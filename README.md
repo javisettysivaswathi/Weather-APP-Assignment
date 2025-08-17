@@ -38,6 +38,7 @@ App can store user input and weather data in a database and let user do **CRUD o
 https://github.com/javisettysivaswathi/Weather-APP-Assignment
 cd weather-app/
 
+OWN_API_KEY=" " ---- .env file
 
 installed libraries---libraries
 pip3 install requests-----libraries
