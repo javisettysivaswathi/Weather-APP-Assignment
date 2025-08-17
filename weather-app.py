@@ -1,4 +1,3 @@
-# weather-app.py
 from datetime import datetime
 from weather_sql import (
     init_db,
@@ -33,8 +32,7 @@ def weather_icon(desc: str) -> str:
 
 def main():
     init_db()
-
-    print("### Weather App by Javisetty Siva swathi ###")
+    print("### Weather App by Javisetty Siva Swathi ###")
     print("Learn more about PM Accelerator: https://www.linkedin.com/company/product-manager-accelerator/\n")
 
     while True:
@@ -49,7 +47,7 @@ def main():
         print("8. Show Google Maps / YouTube links")
         print("9. Exit")
 
-        choice = input("Choose option: ").strip()
+        choice = input("Choose option (1-9): ").strip()
 
         if choice == "1":
             city = input("Enter city: ").strip()
@@ -80,15 +78,21 @@ def main():
                 print("❌ Failed to fetch/save weather.")
 
         elif choice == "4":
-            records = read_all_records()
-            if records:
-                print("\n--- Saved Records ---")
-                for r in records:
-                    # r[0]: id, r[1]: city, r[2]: date, r[3]: temp, r[4]: desc
-                    icon = weather_icon(r[4])
-                    print(f"[{r[0]}] {r[2]} - {r[1]}: {r[3]}°C, {icon} {r[4]}")
-            else:
-                print("📭 No records found.")
+            city = input("Enter city: ").strip()
+            # Filter records by city
+            records = [r for r in read_all_records() if r[1].lower() == city.lower()]
+            if not records:
+                print("⚡ No records found for this city. Fetching current weather...")
+                if create_weather_record(city):
+                    print("✅ Weather fetched and saved!")
+                    records = [r for r in read_all_records() if r[1].lower() == city.lower()]
+                else:
+                    print("❌ Could not fetch weather for this city.")
+                    continue
+            print(f"\n--- Saved Records for {city.title()} ---")
+            for r in records:
+                icon = weather_icon(r[4])
+                print(f"[{r[0]}] {r[2]} - {r[1]}: {r[3]}°C, {icon} {r[4]}")
 
         elif choice == "5":
             try:

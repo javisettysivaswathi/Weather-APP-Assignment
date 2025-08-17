@@ -3,6 +3,7 @@ import sqlite3
 import requests
 import csv
 import json
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,7 +30,7 @@ def init_db():
 
 def get_current_weather(city):
     if not API_KEY:
-        print("❌ ERROR: Please set your OpenWeatherMap API key in environment variable 'OWN_API_KEY'.")
+        print("❌ Please set API key in .env as OWN_API_KEY.")
         return None
     params = {"q": city, "appid": API_KEY, "units": "metric"}
     resp = requests.get(BASE_WEATHER_URL, params=params)
@@ -44,7 +45,7 @@ def get_current_weather(city):
 
 def get_5day_forecast(city):
     if not API_KEY:
-        print("❌ ERROR: Please set your OpenWeatherMap API key in environment variable 'OWN_API_KEY'.")
+        print("❌ Please set API key in .env as OWN_API_KEY.")
         return None
     params = {"q": city, "appid": API_KEY, "units": "metric"}
     resp = requests.get(BASE_FORECAST_URL, params=params)
@@ -52,7 +53,6 @@ def get_5day_forecast(city):
         return None
     data = resp.json()
     forecast = []
-    # The API returns data every 3 hours, pick those at 12:00:00 each day
     for item in data['list']:
         if "12:00:00" in item['dt_txt']:
             forecast.append({
@@ -127,4 +127,3 @@ def generate_google_maps_link(city):
 
 def get_youtube_search_link(city):
     return f"https://www.youtube.com/results?search_query={city.replace(' ', '+')}+travel"
-
